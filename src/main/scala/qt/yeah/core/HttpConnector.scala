@@ -27,10 +27,6 @@ class HttpConnector(server: ServerSocketChannel) extends Actor {
   var startactors=10
   var maxactors=200
 
-
-  //setup the user defined routes
-  //routes
-
   //create the actors
   for(loop<-0 to startactors){
     actorpool.append()

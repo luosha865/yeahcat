@@ -8,13 +8,8 @@ import java.net.InetSocketAddress
 import qt.yeah.core.{HttpRequest, HttpConnector}
 import HttpRequest.RequestInfo
 
-import java.nio._
-import java.nio.channels._
-import java.nio.charset._
 import akka.actor._
 import qt.yeah.core.HttpConnector
-import collection.mutable.{ArrayBuffer,Map,Queue}
-import scala.util.matching.Regex
 
 
 object Bootstrap {

@@ -15,6 +15,7 @@ import scala.util.matching.Regex
 
 object HttpProcessor{
   def apply(actornum: Int,routesmap:Routes = new Routes()): HttpProcessor = {
+    routesmap.routes
     new HttpProcessor(actornum ,routesmap)
   }
 }
