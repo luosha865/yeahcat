@@ -7,9 +7,4 @@ version := "1.0"
 
 scalaVersion := "2.11.6"
 
-libraryDependencies += "org.apache.tomcat" % "catalina" % "6.0.44"
-
-libraryDependencies += "javax.servlet" % "javax.servlet-api" % "3.1.0"
-
-addCompilerPlugin(
-  "org.scala-lang.plugins" % "scala-continuations-plugin_2.11.6" % "1.0.2")
+libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.3.11"
