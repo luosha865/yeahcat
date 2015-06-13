@@ -10,12 +10,9 @@ import java.nio.charset._
 
 import akka.actor._
 
-import scala.collection.mutable.Map
-import scala.util.matching.Regex
 
 object HttpProcessor{
-  def apply(actornum: Int,routesmap:Routes = new Routes()): HttpProcessor = {
-    routesmap.routes
+  def apply(actornum: Int,routesmap:Routes): HttpProcessor = {
     new HttpProcessor(actornum ,routesmap)
   }
 }
@@ -67,18 +64,13 @@ class HttpProcessor(actornum: Int,routesmap:Routes) extends Actor{
     return response
   }
 
-  def doget(url:String):String=findroute("GET",url)
-  def dopost(url:String):String=findroute("POST",url)
-  def doput(url:String):String=findroute("PUT",url)
-  def dodelete(url:String):String=findroute("DELETE",url)
+  def doget(url:String):String=findroute(url,"GET")
+  def dopost(url:String):String=findroute(url,"POST")
+  def doput(url:String):String=findroute(url,"PUT")
+  def dodelete(url:String):String=findroute(url,"DELETE")
 
-  def findroute(method:String,url:String):String= {
-    val methodroutes=routesmap.getOrElse(method,Map[String,()=>String]())
-    methodroutes.
-      filterKeys(pattern => new Regex("^"+pattern+"$").findFirstIn(url).isDefined).
-      headOption.
-      getOrElse(("",()=>"HTTP/1.1 404 Not Found")).
-      _2()
+  def findroute(url:String,method:String):String= {
+    routesmap.findroute(url,method)
   }
 
   def receive= {

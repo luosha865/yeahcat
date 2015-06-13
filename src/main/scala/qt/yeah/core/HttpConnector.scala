@@ -14,23 +14,22 @@ import akka.actor._
 import scala.collection.mutable.{ArrayBuffer, Queue}
 
 object HttpConnector {
-  def apply( address: InetSocketAddress, backlog: Int = 0): HttpConnector = {
+  def apply( address: InetSocketAddress,routesmap: Routes, backlog: Int = 0): HttpConnector = {
     val server = ServerSocketChannel.open().bind(address, backlog)
-    new HttpConnector(server)
+    new HttpConnector(server,routesmap)
   }
 }
 
-class HttpConnector(server: ServerSocketChannel) extends Actor {
+class HttpConnector(server: ServerSocketChannel,routesmap: Routes) extends Actor {
 
   val actorpool:ArrayBuffer[ActorRef]=new ArrayBuffer(0)
   val availableactors:Queue[Int]=new Queue()
   var startactors=10
   var maxactors=200
-
   //create the actors
   for(loop<-0 to startactors){
     actorpool.append()
-    actorpool.append(context.actorOf(Props(HttpProcessor(loop)),name="RequestHandler"+loop))
+    actorpool.append(context.actorOf(Props(HttpProcessor(loop,routesmap)),name="RequestHandler"+loop))
     availableactors.enqueue(loop)
   }
 
@@ -40,7 +39,7 @@ class HttpConnector(server: ServerSocketChannel) extends Actor {
       if(availableactors.isEmpty) {
         if(actorpool.size < maxactors) {
           var actornum=actorpool.size
-          actorpool.append(context.actorOf(Props(HttpProcessor(actornum)),name="RequestHandler"+actornum))
+          actorpool.append(context.actorOf(Props(HttpProcessor(actornum,routesmap)),name="RequestHandler"+actornum))
           actornum
         }
         else {
